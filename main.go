@@ -79,10 +79,6 @@ func translate(src, dst string) {
 
 	baseLayout = template.Must(template.New("base.layout").Funcs(htmlfuncs).ParseFiles("base.layout"))
 
-	c := exec.Command("git", "ls-files", "--exclude-standard", "-i", "-o")
-	c.Stderr = os.Stderr
-	skip := makeSet(lines(mustGetOutput(c)))
-
 	skipDir := map[string]bool{
 		".git":    true,
 		"article": true,
@@ -100,7 +96,7 @@ func translate(src, dst string) {
 		if skipDir[fi.Name()] {
 			return filepath.SkipDir
 		}
-		if !fi.IsDir() && !skip[path] && fi.Name()[0] != '.' {
+		if !fi.IsDir() && fi.Name()[0] != '.' {
 			handle(path, a)
 		}
 		return nil
