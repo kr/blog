@@ -63,6 +63,10 @@ func makeSet(a []string) map[string]bool {
 }
 
 func main() {
+	if len(os.Args) < 3 {
+		fmt.Println("Usage: blog src dst")
+		os.Exit(1)
+	}
 	translate(os.Args[1], os.Args[2])
 	serve(os.Args[2])
 }
