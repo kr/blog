@@ -304,7 +304,7 @@ func readTable(path string) map[string]string {
 		panic(err)
 	}
 	for _, line := range strings.Split(string(body), "\n") {
-		if part := strings.SplitN(line, " ", 2); len(part) == 2 {
+		if part := strings.SplitN(line, "\t", 2); len(part) == 2 {
 			m[part[0]] = part[1]
 		}
 	}
