@@ -170,6 +170,9 @@ type Page struct {
 
 func handle(p string, a []Page) {
 	ext := path.Ext(p)
+	if strings.HasSuffix(ext, "~") {
+		return
+	}
 	base := p[:len(p)-len(ext)]
 	page := Page{
 		Articles: a,
