@@ -26,6 +26,16 @@ const (
 	timePath = "2006/01/02"
 )
 
+type Page struct {
+	Title    template.HTML
+	Summary  template.HTML
+	Path     string
+	Id       string
+	Content  template.HTML
+	Date     time.Time
+	Articles []Page
+}
+
 var dstDir string
 
 var (
@@ -156,16 +166,6 @@ func splitPara(b []byte) (head, rest []byte, err error) {
 		head, rest = b[0:i], b[i+2:]
 	}
 	return
-}
-
-type Page struct {
-	Title    template.HTML
-	Summary  template.HTML
-	Path     string
-	Id       string
-	Content  template.HTML
-	Date     time.Time
-	Articles []Page
 }
 
 func handle(p string, a []Page) {
