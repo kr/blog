@@ -9,10 +9,14 @@ input and web page templates.
 
 #### Usage
 
-    $ blog src dst
+    $ blog [output]
 
-Files are read from `src` and written to `dst`.
-The destination directory is removed on startup.
+Files are read from `.`. If output contains a colon,
+it is treated as an address and the site is served
+there. Otherwise, it is treated as a path, it will
+be removed, and rendered files will be written there.
+
+Missing output argument is treated like `:8000`.
 
 #### Special Files
 

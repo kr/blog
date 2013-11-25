@@ -73,20 +73,29 @@ func makeSet(a []string) map[string]bool {
 }
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Usage: blog src dst")
+	output := ":8000"
+	if len(os.Args) == 2 {
+		output = os.Args[1]
+	}
+	if len(os.Args) > 2 {
+		fmt.Fprintln(os.Stderr, "Usage: blog [output]")
+		fmt.Fprintln(os.Stderr, "where output is an addr or path")
 		os.Exit(1)
 	}
-	translate(os.Args[1], os.Args[2])
-	serve(os.Args[2])
+	if strings.Contains(output, ":") {
+		dst, err := ioutil.TempDir("", "blog")
+		if err != nil {
+			panic(err)
+		}
+		translate(dst)
+		serve(output, dst)
+	} else {
+		translate(output)
+	}
 }
 
-func translate(src, dst string) {
-	if err := os.Chdir(src); err != nil {
-		panic(err)
-	}
+func translate(dst string) {
 	dstDir = dst
-
 	if err := os.RemoveAll(dst); err != nil {
 		panic(err)
 	}
@@ -285,11 +294,7 @@ func markdownPath(p string) []byte {
 	return blackfriday.MarkdownCommon(b)
 }
 
-func serve(dir string) {
-	addr := ":" + os.Getenv("PORT")
-	if addr == ":" {
-		addr = ":8000"
-	}
+func serve(addr, dir string) {
 	for k, v := range readTable("redirect") {
 		http.Handle(k, http.RedirectHandler(v, http.StatusMovedPermanently))
 	}
