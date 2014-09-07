@@ -5,8 +5,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/kr/smartypants"
-	"github.com/russross/blackfriday"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -19,6 +17,9 @@ import (
 	"strings"
 	ttemplate "text/template"
 	"time"
+
+	"github.com/kr/smartypants"
+	"github.com/russross/blackfriday"
 )
 
 const (
