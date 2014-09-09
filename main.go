@@ -113,7 +113,7 @@ func translate(dst string) {
 	for _, article := range a {
 		article.renderHTML("article.layout")
 	}
-	filepath.Walk(".", func(path string, fi os.FileInfo, err error) error {
+	err := filepath.Walk(".", func(path string, fi os.FileInfo, err error) error {
 		if err != nil {
 			panic(err)
 		}
@@ -125,6 +125,9 @@ func translate(dst string) {
 		}
 		return nil
 	})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func renderArticles(paths []string, err error) []Page {
