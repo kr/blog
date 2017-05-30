@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -18,6 +19,7 @@ import (
 	ttemplate "text/template"
 	"time"
 
+	"github.com/kr/jsonfeed"
 	"github.com/kr/smartypants"
 	"github.com/russross/blackfriday"
 )
@@ -28,8 +30,8 @@ const (
 )
 
 type Page struct {
-	Title    template.HTML
-	Summary  template.HTML
+	Title    template.HTML // TODO(kr): make plain text
+	Summary  template.HTML // TODO(kr): make plain text
 	Path     string
 	Id       string
 	Content  template.HTML
@@ -194,6 +196,35 @@ func handle(p string, a []Page) {
 		if a.Date.After(page.Date) {
 			page.Date = a.Date
 		}
+	}
+	if p == "./feed.json" {
+		b, err := ioutil.ReadFile(p)
+		if err != nil {
+			panic(err)
+		}
+		var feed jsonfeed.Feed
+		err = json.Unmarshal(b, &feed)
+		if err != nil {
+			panic(err)
+		}
+		feed.Items = make([]jsonfeed.Item, len(a))
+		for i, art := range a {
+			feed.Items[i] = jsonfeed.Item{
+				ID:            feed.HomePageURL + art.Id,
+				URL:           feed.HomePageURL + art.Path,
+				Title:         string(art.Title),
+				ContentHTML:   string(art.Content),
+				Summary:       string(art.Summary),
+				DatePublished: art.Date, // TODO(kr): don't update on mod
+				DateModified:  art.Date,
+			}
+		}
+		w := createDst(p)
+		err = json.NewEncoder(w).Encode(&feed)
+		if err != nil {
+			panic(err)
+		}
+		return
 	}
 	switch ext {
 	case ".t":
