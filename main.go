@@ -35,6 +35,8 @@ type Page struct {
 	Content  template.HTML
 	Date     time.Time
 	Articles []Page
+
+	Redirects map[string]string
 }
 
 var dstDir string
@@ -109,6 +111,7 @@ func translate(dst string) {
 		"draft":   true,
 	}
 
+	redirects := readTable("redirect")
 	a := renderArticles(filepath.Glob("article/*.md"))
 	for _, article := range a {
 		article.renderHTML("article.layout")
@@ -121,7 +124,7 @@ func translate(dst string) {
 			return filepath.SkipDir
 		}
 		if !fi.IsDir() && fi.Name()[0] != '.' {
-			handle(path, a)
+			handle(path, a, redirects)
 		}
 		return nil
 	})
@@ -134,6 +137,7 @@ func renderArticles(paths []string, err error) []Page {
 	if err != nil {
 		panic(err)
 	}
+
 	a := make([]Page, len(paths))
 	for i, p := range paths {
 		title, summary, body := readArticle(p)
@@ -181,14 +185,15 @@ func splitPara(b []byte) (head, rest []byte, err error) {
 	return
 }
 
-func handle(p string, a []Page) {
+func handle(p string, a []Page, redirects map[string]string) {
 	ext := path.Ext(p)
 	if strings.HasSuffix(ext, "~") {
 		return
 	}
 	base := p[:len(p)-len(ext)]
 	page := Page{
-		Articles: a,
+		Articles:  a,
+		Redirects: redirects,
 	}
 	for _, a := range a {
 		if a.Date.After(page.Date) {
