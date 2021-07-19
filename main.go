@@ -76,7 +76,7 @@ func makeSet(a []string) map[string]bool {
 }
 
 func main() {
-	output := ":8000"
+	output := ":80"
 	if len(os.Args) == 2 {
 		output = os.Args[1]
 	}
