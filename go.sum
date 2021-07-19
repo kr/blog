@@ -1,0 +1,4 @@
+github.com/kr/smartypants v0.1.0 h1:Sn8hn5XrY+uXrxSWUdcr621Gfpk11mOGGVs4XX06kEw=
+github.com/kr/smartypants v0.1.0/go.mod h1:EcTX9ge+SWNaGwbQvHwNICsMGavh98FLUqyOWFr+j9c=
+github.com/russross/blackfriday v1.5.1 h1:B8ZN6pD4PVofmlDCDUdELeYrbsVIDM/bpjW3v3zgcRc=
+github.com/russross/blackfriday v1.5.1/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
